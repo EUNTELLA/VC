@@ -1,0 +1,42 @@
+<!-- Created: 2026-09-17 11:10:26 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>할일 관리</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <h1>할일 관리</h1>
+
+    <div class="progress">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <span id="progress-label">0 / 0 완료 (0%)</span>
+    </div>
+
+    <form id="todo-form" class="todo-form">
+      <input id="todo-text" type="text" placeholder="할일을 입력하세요" required>
+      <select id="todo-category">
+        <option value="work">업무</option>
+        <option value="personal">개인</option>
+        <option value="study">공부</option>
+      </select>
+      <button type="submit">추가</button>
+    </form>
+
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">전체</button>
+      <button class="filter-btn" data-filter="work">업무</button>
+      <button class="filter-btn" data-filter="personal">개인</button>
+      <button class="filter-btn" data-filter="study">공부</button>
+    </div>
+
+    <ul id="todo-list" class="todo-list"></ul>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+/* Created: 2026-09-17 11:10:26 */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f7;
+  margin: 0;
+  padding: 40px 16px;
+  color: #222;
+}
+
+.app {
+  max-width: 520px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+.progress {
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  background: #e5e5ea;
+  border-radius: 6px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: #34c759;
+  height: 100%;
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+#progress-label {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #666;
+}
+
+.todo-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.todo-form input[type="text"] {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #d0d0d5;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.todo-form select {
+  padding: 8px 6px;
+  border: 1px solid #d0d0d5;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.todo-form button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #007aff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.filters {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.filter-btn {
+  padding: 6px 12px;
+  border: 1px solid #d0d0d5;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: #007aff;
+  border-color: #007aff;
+  color: #fff;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.todo-item:last-child {
+  border-bottom: none;
+}
+
+.todo-text {
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.category-tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.category-tag.work {
+  background: #007aff;
+}
+
+.category-tag.personal {
+  background: #ff9500;
+}
+
+.category-tag.study {
+  background: #af52de;
+}
+
+.todo-actions button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 6px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  font-size: 14px;
+  padding: 24px 0;
+}

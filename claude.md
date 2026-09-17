@@ -18,6 +18,9 @@ Current contents:
   and a trained scikit-learn model predicts it. Fully implemented.
 - `week03/web_version/` — Flask + HTML5 canvas equivalent of the desktop
   version (same model, browser-based drawing UI). Fully implemented.
+- `week04/` — Personal to-do list app (plain HTML/CSS/JS, no server,
+  `localStorage` persistence). See `week04/PRD.md` and
+  `week04/claude.md`. Fully implemented.
 
 ## Commands
 
@@ -56,7 +59,11 @@ install on Windows.
 ## Coding rules
 
 - All code and comments in this repository are written in English, even
-  when instructions/discussion happen in another language.
+  when instructions/discussion happen in another language. User-facing
+  UI text (button labels, category names, etc.) may be Korean when the
+  app targets a Korean-speaking user — see `week04/app.js`
+  (`CATEGORY_LABELS`) for the pattern: English identifiers internally,
+  Korean strings only at the point they're shown to the user.
 - Every new file must start with a comment stating its creation date and
   time (local time, `YYYY-MM-DD HH:MM:SS` format), e.g.:
   ```python
