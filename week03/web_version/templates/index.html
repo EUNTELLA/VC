@@ -1,0 +1,42 @@
+<!-- Created: 2026-09-17 10:32:30 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Handwritten Digit Recognizer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 40px;
+    }
+    canvas {
+      border: 2px solid #333;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .controls {
+      margin-top: 15px;
+    }
+    button {
+      font-size: 16px;
+      padding: 8px 16px;
+      margin: 0 6px;
+    }
+    #result {
+      font-size: 22px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Handwritten Digit Recognizer</h1>
+  <canvas id="canvas" width="280" height="280"></canvas>
+  <div class="controls">
+    <button id="predict-btn">Predict</button>
+    <button id="clear-btn">Clear</button>
+  </div>
+  <p id="result">Draw a digit (0-9)</p>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+scikit-learn
+numpy
+pandas
+pillow
+joblib
+pip-system-certs
