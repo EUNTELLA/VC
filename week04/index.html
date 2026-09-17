@@ -4,15 +4,183 @@
 <head>
   <meta charset="UTF-8">
   <title>할일 관리</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f7;
+      margin: 0;
+      padding: 40px 16px;
+      color: #222;
+    }
+
+    .app {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .progress {
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      background: #e5e5ea;
+      border-radius: 6px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      background: #34c759;
+      height: 100%;
+      width: 0%;
+    }
+
+    #progress-label {
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .todo-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .todo-form input[type="text"] {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid #d0d0d5;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .todo-form select {
+      padding: 8px 6px;
+      border: 1px solid #d0d0d5;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .todo-form button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      background: #007aff;
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .filters {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .filter-btn {
+      padding: 6px 12px;
+      border: 1px solid #d0d0d5;
+      border-radius: 999px;
+      background: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .filter-btn.active {
+      background: #007aff;
+      border-color: #007aff;
+      color: #fff;
+    }
+
+    .todo-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .todo-item:last-child {
+      border-bottom: none;
+    }
+
+    .todo-text {
+      flex: 1;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .todo-item.completed .todo-text {
+      text-decoration: line-through;
+      color: #999;
+    }
+
+    .category-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .category-tag.work {
+      background: #007aff;
+    }
+
+    .category-tag.personal {
+      background: #ff9500;
+    }
+
+    .category-tag.study {
+      background: #af52de;
+    }
+
+    .todo-actions button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px 6px;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      padding: 24px 0;
+    }
+  </style>
 </head>
 <body>
   <div class="app">
     <h1>할일 관리</h1>
 
+    <!-- Progress display: values are static placeholders until the
+         data logic is wired up. -->
     <div class="progress">
       <div class="progress-bar">
-        <div id="progress-fill" class="progress-fill"></div>
+        <div id="progress-fill" class="progress-fill" style="width: 0%;"></div>
       </div>
       <span id="progress-label">0 / 0 완료 (0%)</span>
     </div>
@@ -37,6 +205,206 @@
     <ul id="todo-list" class="todo-list"></ul>
   </div>
 
-  <script src="app.js"></script>
+  <script>
+    const STORAGE_KEY = "week04_todos";
+
+    const CATEGORY_LABELS = { work: "업무", personal: "개인", study: "공부" };
+
+    function loadTodos() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveTodos() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    }
+
+    let todos = loadTodos();
+    let editingId = null;
+    let currentFilter = "all";
+
+    const form = document.getElementById("todo-form");
+    const textInput = document.getElementById("todo-text");
+    const categorySelect = document.getElementById("todo-category");
+    const listEl = document.getElementById("todo-list");
+    const filtersEl = document.getElementById("filters");
+    const progressFillEl = document.getElementById("progress-fill");
+    const progressLabelEl = document.getElementById("progress-label");
+
+    function createId() {
+      return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function addTodo(title, category) {
+      todos.push({
+        id: createId(),
+        title,
+        category,
+        completed: false,
+        createdAt: Date.now(),
+      });
+      saveTodos();
+      render();
+    }
+
+    function updateTodo(id, title, category) {
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+      todo.title = title;
+      todo.category = category;
+      saveTodos();
+      render();
+    }
+
+    function deleteTodo(id) {
+      todos = todos.filter((t) => t.id !== id);
+      saveTodos();
+      render();
+    }
+
+    function toggleComplete(id) {
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+      todo.completed = !todo.completed;
+      saveTodos();
+      render();
+    }
+
+    function createItemElement(todo) {
+      const li = document.createElement("li");
+      li.className = "todo-item" + (todo.completed ? " completed" : "");
+
+      if (editingId === todo.id) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = todo.title;
+
+        const select = document.createElement("select");
+        for (const [value, label] of Object.entries(CATEGORY_LABELS)) {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = label;
+          if (value === todo.category) option.selected = true;
+          select.appendChild(option);
+        }
+
+        const saveBtn = document.createElement("button");
+        saveBtn.type = "button";
+        saveBtn.textContent = "저장";
+        saveBtn.addEventListener("click", () => {
+          const newTitle = input.value.trim();
+          if (!newTitle) return;
+          editingId = null;
+          updateTodo(todo.id, newTitle, select.value);
+        });
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.type = "button";
+        cancelBtn.textContent = "취소";
+        cancelBtn.addEventListener("click", () => {
+          editingId = null;
+          render();
+        });
+
+        li.append(input, select, saveBtn, cancelBtn);
+        return li;
+      }
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = todo.completed;
+      checkbox.addEventListener("change", () => toggleComplete(todo.id));
+
+      const title = document.createElement("span");
+      title.className = "todo-text";
+      title.textContent = todo.title;
+
+      const tag = document.createElement("span");
+      tag.className = `category-tag ${todo.category}`;
+      tag.textContent = CATEGORY_LABELS[todo.category];
+
+      const actions = document.createElement("span");
+      actions.className = "todo-actions";
+
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.textContent = "수정";
+      editBtn.addEventListener("click", () => {
+        editingId = todo.id;
+        render();
+      });
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.textContent = "삭제";
+      deleteBtn.addEventListener("click", () => deleteTodo(todo.id));
+
+      actions.append(editBtn, deleteBtn);
+      li.append(checkbox, title, tag, actions);
+      return li;
+    }
+
+    function renderProgress() {
+      const total = todos.length;
+      if (total === 0) {
+        progressFillEl.style.width = "0%";
+        progressLabelEl.textContent = "등록된 할 일이 없습니다";
+        return;
+      }
+      const done = todos.filter((t) => t.completed).length;
+      const percent = Math.round((done / total) * 100);
+      progressFillEl.style.width = `${percent}%`;
+      progressLabelEl.textContent = `${done} / ${total} 완료 (${percent}%)`;
+    }
+
+    function render() {
+      renderProgress();
+
+      const visibleTodos =
+        currentFilter === "all"
+          ? todos
+          : todos.filter((t) => t.category === currentFilter);
+
+      listEl.innerHTML = "";
+      if (visibleTodos.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty-state";
+        empty.textContent = "할일이 없습니다.";
+        listEl.appendChild(empty);
+      } else {
+        for (const todo of visibleTodos) {
+          listEl.appendChild(createItemElement(todo));
+        }
+      }
+
+      for (const btn of filtersEl.querySelectorAll(".filter-btn")) {
+        btn.classList.toggle("active", btn.dataset.filter === currentFilter);
+      }
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = textInput.value.trim();
+      if (!title) return;
+      addTodo(title, categorySelect.value);
+      textInput.value = "";
+      textInput.focus();
+    });
+
+    filtersEl.addEventListener("click", (event) => {
+      const btn = event.target.closest(".filter-btn");
+      if (!btn) return;
+      currentFilter = btn.dataset.filter;
+      render();
+    });
+
+    render();
+  </script>
 </body>
 </html>

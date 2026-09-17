@@ -18,9 +18,10 @@ Current contents:
   and a trained scikit-learn model predicts it. Fully implemented.
 - `week03/web_version/` — Flask + HTML5 canvas equivalent of the desktop
   version (same model, browser-based drawing UI). Fully implemented.
-- `week04/` — Personal to-do list app (plain HTML/CSS/JS, no server,
-  `localStorage` persistence). See `week04/PRD.md` and
-  `week04/claude.md`. Fully implemented.
+- `week04/` — Personal to-do list app, a single self-contained
+  `index.html` (no server, no other files), with `localStorage`
+  persistence. Fully implemented per `week04/PRD.md`; see
+  `week04/claude.md`.
 
 ## Commands
 
