@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Generated ML artifacts (regenerate with train_model.py)
+model/
+
+# OS files
+Thumbs.db
+.DS_Store
