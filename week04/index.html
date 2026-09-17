@@ -374,10 +374,16 @@
     function render() {
       renderProgress();
 
-      const visibleTodos =
+      const visibleTodos = (
         currentFilter === "all"
           ? todos
-          : todos.filter((t) => t.category === currentFilter);
+          : todos.filter((t) => t.category === currentFilter)
+      )
+        // Completed items sink to the bottom; Array#sort is stable, so
+        // relative order within each group (completed/incomplete) is
+        // preserved.
+        .slice()
+        .sort((a, b) => Number(a.completed) - Number(b.completed));
 
       listEl.innerHTML = "";
       if (visibleTodos.length === 0) {

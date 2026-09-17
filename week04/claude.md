@@ -27,9 +27,10 @@ Just open `index.html` in a browser (double-click it, or double-click
 ## Implemented (feature-complete per PRD.md)
 - Add / inline edit / delete todos, persisted to `localStorage`.
 - Completion checkbox: toggles `completed`, applies strikethrough +
-  dimmed styling via the `.todo-item.completed` CSS class (completed
-  items are NOT re-sorted to the bottom — dimming was the chosen
-  approach when given a choice between the two).
+  dimmed styling via the `.todo-item.completed` CSS class, AND sorts
+  completed items to the bottom of the (filtered) list on render —
+  sorting is done on a copy in `render()`, it doesn't mutate/reorder the
+  underlying `todos` array or its saved order.
 - Category filter tabs (전체/업무/개인/공부) that show/hide list items.
 - Progress bar + label (`"7 / 15 완료 (47%)"`), recalculated on every
   render; shows "등록된 할 일이 없습니다" instead when the list is empty.
