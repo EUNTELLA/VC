@@ -33,11 +33,14 @@ Just open `index.html` in a browser (double-click it, or double-click
 - Category filter tabs (전체/업무/개인/공부) that show/hide list items.
 - Progress bar + label (`"7 / 15 완료 (47%)"`), recalculated on every
   render; shows "등록된 할 일이 없습니다" instead when the list is empty.
-- `loadTodos()` fails safe to `[]` (empty list, no thrown error) when
-  `localStorage` has no entry, invalid JSON, or valid JSON that isn't an
-  array — covered by a headless jsdom regression test (add/edit/delete/
-  toggle/filter/progress + persistence across a simulated reload, plus
-  the three malformed-storage cases above), all passing.
+- On a genuinely fresh start (no `localStorage` entry yet), `loadTodos()`
+  returns 3 built-in `SAMPLE_TODOS` instead of an empty list, so the app
+  isn't blank the first time it's opened. Invalid JSON or valid JSON
+  that isn't an array still fails safe to a real empty list (`[]`), not
+  samples — that's treated as an error case, not a fresh install.
+- Covered by a headless jsdom regression test (add/edit/delete/toggle/
+  filter/progress + persistence across a simulated reload, plus the
+  sample-data and malformed-storage cases above), all passing.
 
 ## Notes
 - All code and comments are written in English; user-facing UI text is

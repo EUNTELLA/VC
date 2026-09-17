@@ -210,9 +210,17 @@
 
     const CATEGORY_LABELS = { work: "업무", personal: "개인", study: "공부" };
 
+    // Shown only on a genuinely fresh start (no localStorage entry yet)
+    // so the app isn't empty the very first time it's opened.
+    const SAMPLE_TODOS = [
+      { id: "sample-1", title: "프로젝트 기획서 작성", category: "work", completed: false, createdAt: Date.now() },
+      { id: "sample-2", title: "장보기", category: "personal", completed: false, createdAt: Date.now() },
+      { id: "sample-3", title: "자바스크립트 강의 듣기", category: "study", completed: true, createdAt: Date.now() },
+    ];
+
     function loadTodos() {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
+      if (!raw) return SAMPLE_TODOS;
       try {
         const parsed = JSON.parse(raw);
         return Array.isArray(parsed) ? parsed : [];
